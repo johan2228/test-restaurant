@@ -36,8 +36,8 @@ The project code base is mainly located within the `src` folder. This folder is 
 
 ```
 
+```ini
 test-restaurant
-┃
 ┣ src
 ┃ ┣ entities
 ┃ ┃ ┣ Transaction.ts
@@ -74,6 +74,8 @@ test-restaurant
 ┣ package.json
 ┣ serverless.ts
 ┗ tsconfig.json
+
+```
 
 ```
 
