@@ -1,23 +1,21 @@
 import { APIGatewayAuthorizerResult, APIGatewayProxyHandler } from 'aws-lambda';
-import { AWSResponse, DatabaseManager, hashPassword, comparePassword, generateToken, verifyToken } from '@libs/index';
-import User from '@entities/User';
+import { AWSResponse, hashPassword, comparePassword, generateToken, verifyToken } from '@libs/index';
 import { policyDocument, denyPolicyDocument } from './types';
+import { getUser, saveUser } from './service';
 
 // Register Handler
 export const register: APIGatewayProxyHandler = async (event) => {
+  // Parse request body for user registration details
   const { name, email, password } = JSON.parse(event.body);
 
   try {
-    const manager = await DatabaseManager.getManager();
+
+    // Hash password before saving
     const hashedPassword = await hashPassword(password);
 
-    const user = new User();
-    user.name = name;
-    user.email = email;
-    user.password = hashedPassword;
+    await saveUser(name, email, hashedPassword)
 
-    await manager.save(user);
-
+    // Successful registration response
     return AWSResponse(201, { message: 'User registered successfully' });
   } catch (error) {
     console.error('ERROR on register user =>', error);
@@ -30,14 +28,19 @@ export const login: APIGatewayProxyHandler = async (event) => {
   const { email, password } = JSON.parse(event.body);
 
   try {
-    const manager = await DatabaseManager.getManager();
-    const user = await manager.findOne(User, { where: { email } });
 
+    // Find user by email
+    const user = await getUser(email);
+
+    // Validate user credentials
     if (!user || !(await comparePassword(password, user.password))) {
       return AWSResponse(401, { message: 'Invalid email or password' });
     }
 
+    // Generate JWT token
     const token = generateToken(user.id);
+
+    // Successful login response with token
     return AWSResponse(200, { token });
   } catch (error) {
     console.error('ERROR on login =>', error);
@@ -47,9 +50,13 @@ export const login: APIGatewayProxyHandler = async (event) => {
 
 // Verify Token Handler
 export const verify = async (event): Promise<APIGatewayAuthorizerResult> => {
+  // Get JWT token from request headers
   const token = event.headers.Authorization;
   try {
+    // Verify and decode JWT token
     const decoded = verifyToken(token);
+
+    // Return authorizer result with principalId and policy document
     return {
       principalId: decoded.userId,
       policyDocument,

@@ -5,11 +5,13 @@ import { Transaction, User } from "@entities/index";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
+// Nearby Places Handler
 export const nearby: APIGatewayProxyHandler = async (event) => {
   const { location, radius, type } = event.queryStringParameters;
   const userId = event.requestContext.authorizer.principalId;
 
   try {
+    // Get database manager instance
     const manager = await DatabaseManager.getManager();
 
     const user = await manager.findOne(User, { where: { id: userId } });
@@ -29,14 +31,17 @@ export const nearby: APIGatewayProxyHandler = async (event) => {
         }
       });
 
+      // Return 404 if location not found
       if (geocodeResponse.data.results.length === 0) {
         return AWSResponse(404, { message: 'Location not found' });
       }
 
+      // Extract latitude and longitude from geocode response
       const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
       coordinates = `${lat},${lng}`;
     }
 
+    // Fetch nearby places from Google Places API
     const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
       params: {
         location: coordinates,
@@ -55,6 +60,7 @@ export const nearby: APIGatewayProxyHandler = async (event) => {
 
     await manager.save(transaction);
 
+    // Return response from Google Places API
     return AWSResponse(200, response.data);
   } catch (error) {
     console.error('ERROR =>', error);
