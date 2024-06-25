@@ -45,18 +45,25 @@ For detailed instructions, please refer to the [documentation](https://www.serve
 
 ### Endpoints:
 
-POST - https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/auth/register
-POST - https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/auth/login
-GET - https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/restaurants/nearby
-GET - https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/transactions
+- POST - https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/auth/register
+
+- POST - https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/auth/login
+
+- GET - https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/restaurants/nearby
+
+- GET - https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/transactions
 
 ### Functions:
 
-verify: test-restaurant-prod-verify
-register: test-restaurant-prod-register
-login: test-restaurant-prod-login
-nearby: test-restaurant-prod-nearby
-listTransactions: test-restaurant-prod-listTransactions
+- verify: test-restaurant-prod-verify
+
+- register: test-restaurant-prod-register
+
+- login: test-restaurant-prod-login
+
+- nearby: test-restaurant-prod-nearby
+
+- listTransactions: test-restaurant-prod-listTransactions
 
 ### Project structure
 
