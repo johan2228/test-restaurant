@@ -65,6 +65,9 @@ For detailed instructions, please refer to the [documentation](https://www.serve
 
 - listTransactions: test-restaurant-prod-listTransactions
 
+- It is currently published at the url https://9saeyvo101.execute-api.us-east-1.amazonaws.com/prod/
+- in the folder in the root of the project called docs, there is the collection exported from postman.
+
 ### Project structure
 
 The project code base is mainly located within the `src` folder. This folder is divided in:
